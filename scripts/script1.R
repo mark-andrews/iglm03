@@ -22,3 +22,18 @@ predict(M_2)[1:10]
 M_3 <- lm(weight ~ height + age + gender, data = weight_df)
 
 M_4 <- lm(weight ~ height + race, data = weight_df)
+
+
+# log odds ----------------------------------------------------------------
+
+theta <- c(0.1, 0.25, 0.5, 0.75, 0.9)
+
+# odds
+odds <- theta/(1 - theta)
+
+# log odds
+log(odds)
+
+# Binary logistic regression ----------------------------------------------
+
+affairs_df <- read_csv("https://raw.githubusercontent.com/mark-andrews/iglm03/master/data/affairs.csv")

@@ -156,7 +156,7 @@ with $y_i \in \{0, 1\}$?
     $$
     where 
     $$
-    \mathrm{logit}(\theta_i) \doteq \log\left(\frac{\theta_i}{1=\theta_i}\right).
+    \mathrm{logit}(\theta_i) \doteq \log\left(\frac{\theta_i}{1-\theta_i}\right).
     $$
 - In other word, we are saying that each observed outcome variable value $y_1, y_2 \ldots y_n$ 
   is a sample from a *Bernoulli* distribution with parameter $\theta_i$, 
