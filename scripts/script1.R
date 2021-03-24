@@ -110,3 +110,25 @@ M_6 <- glm(cheater ~ 1,
 logLik(M_6) * -2 
 
 anova(M_6, M_5, test = 'Chisq')
+
+# ordinal logistic regresion ----------------------------------------------
+library(MASS)
+library(pscl) # to load `admit`
+
+head(admit)
+
+M_7 <- polr(score ~ gre.quant, data = admit)
+summary(M_7)
+
+admit_df_2 <- tibble(gre.quant = seq(300, 800, by = 100))
+
+add_predictions(admit_df_2, M_7, type = 'prob')
+
+mu <- coef(M_7) * 600
+
+# The predicted probability that the outcome is 1
+plogis(M_7$zeta['1|2'], location = mu)
+# The predicted probability that the outcome is 1 or 2
+plogis(M_7$zeta['2|3'], location = mu)
+# The predicted probability that the outcome is 2 
+plogis(M_7$zeta['2|3'], location = mu) - plogis(M_7$zeta['1|2'], location = mu)
