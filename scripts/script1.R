@@ -12,3 +12,13 @@ M_1 <- lm(weight ~ height, data = weight_df_male)
 coef(M_1)
 coefficients(M_1)
 sigma(M_1)
+
+M_2 <- lm(weight ~ height + age, data = weight_df_male)
+coef(M_2)
+sigma(M_2)
+predict(M_2)[1:10]
+
+
+M_3 <- lm(weight ~ height + age + gender, data = weight_df)
+
+M_4 <- lm(weight ~ height + race, data = weight_df)
