@@ -87,3 +87,26 @@ affairs_df_2 <- tibble(yearsmarried = seq(1, 50, by = 0.1))
 predictions_df <- add_predictions(affairs_df_2, M_5, type = 'response')
 
 ggplot(predictions_df, aes(x = yearsmarried, y = pred)) + geom_line()
+
+
+# coefficients ------------------------------------------------------------
+
+summary(M_5)$coefficients
+
+# e^0.0588 ~= 1.06 is the odds ratio corresponding to yearsmarried
+
+confint.default(M_5)
+confint.default(M_5, parm = 'yearsmarried') %>% exp()
+
+
+# log likelihood and deviance ---------------------------------------------
+
+logLik(M_5)
+summary(M_5)
+
+M_6 <- glm(cheater ~ 1, 
+           data = affairs_df,
+           family = binomial(link = 'logit'))
+logLik(M_6) * -2 
+
+anova(M_6, M_5, test = 'Chisq')
