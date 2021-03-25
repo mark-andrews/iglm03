@@ -132,3 +132,28 @@ plogis(M_7$zeta['1|2'], location = mu)
 plogis(M_7$zeta['2|3'], location = mu)
 # The predicted probability that the outcome is 2 
 plogis(M_7$zeta['2|3'], location = mu) - plogis(M_7$zeta['1|2'], location = mu)
+
+
+# Categorical logistic regression ------------------------------------------
+
+library(nnet)
+library(pscl)
+
+# see first few rows of data frame
+head(admit)
+
+M_8 <- multinom(score ~ gre.quant, data = admit)
+summary(M_8)
+
+library(tidyverse)
+library(modelr)
+
+admit_df_2 <- tibble(gre.quant = seq(300, 800, by = 100))
+
+add_predictions(admit_df_2, M_8, type = 'prob')
+
+# calculate linear function of gre.quant = 600, 
+# using the 4 sets of coefficient
+z <- coef(M_8) %*% c(1, 600)
+z <- c(0, z)
+exp(z)/sum(exp(z))
