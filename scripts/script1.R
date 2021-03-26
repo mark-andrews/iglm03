@@ -7,6 +7,7 @@ weight_df <- read_csv("https://raw.githubusercontent.com/mark-andrews/iglm03/mas
 weight_df_male <- filter(weight_df, gender == 'male')
 
 M_1 <- lm(weight ~ height, data = weight_df_male)
+M_1a <- lm(weight ~ height + age + race, data = weight_df_male)
 
 # get the estimates of the coefficients of M_1
 coef(M_1)

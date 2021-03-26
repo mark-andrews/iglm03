@@ -50,5 +50,72 @@ M_11 <- glm(Claims ~ Age + offset(log(Holders)),
             data = insurance_df,
             family = poisson(link = 'log'))
 
-tibble(Age = unique(insurance_df$Age), Holders = 100) %>% 
-  add_predictions(M_11, type = 'response', var = 'rate')
+tibble(Age = unique(insurance_df$Age),
+       Holders = 1000) %>% 
+  add_predictions(M_11, type = 'response',var = 'rate')
+
+# binomial logistic regression
+golf_df <- read_csv("https://raw.githubusercontent.com/mark-andrews/iglm03/master/data/golf_putts.csv")
+
+M_12 <- glm(cbind(success, attempts-success) ~ distance, 
+            family = binomial(link = 'logit'),
+            data = golf_df)
+
+
+# Negative binomial and overdispersed data --------------------------------
+
+biochem_df <- read_csv("https://raw.githubusercontent.com/mark-andrews/iglm03/master/data/biochemist.csv")
+
+
+M_13 <- glm(publications ~ prestige,
+            data = biochem_df,
+            family = poisson(link = 'log')
+)
+
+M_14 <- glm(publications ~ prestige,
+            data = biochem_df,
+            family = quasipoisson(link = 'log')
+)
+
+library(MASS)
+
+M_15 <- glm.nb(publications ~ prestige, data = biochem_df)
+summary(M_15)
+
+tibble(prestige = seq(0, 5, by = 0.1)) %>% 
+  add_predictions(M_15, type = 'response', var = 'mu') %>% 
+  ggplot(aes(x = prestige, y = mu)) + geom_line()
+
+M_16 <- glm.nb(publications ~ prestige + married, 
+               data = biochem_df)
+
+-2 * c(logLik(M_16), logLik(M_15))
+
+anova(M_15, M_16)
+
+
+# zero inflated poisson ---------------------------------------------------
+
+smoking_df <- read_csv("https://raw.githubusercontent.com/mark-andrews/iglm03/master/data/smoking.csv")
+
+library(pscl)
+
+M_17 <- zeroinfl(cigs ~ educ, data = smoking_df)
+summary(M_17)
+
+smoking_df_2 <- tibble(educ = seq(6, 18))
+
+smoking_df_2 %>% 
+  add_predictions(M_17, type = 'zero')
+
+smoking_df_2 %>% 
+  add_predictions(M_17, type = 'count')
+
+smoking_df_2 %>% 
+  add_predictions(M_17, type = 'response')
+
+M_18 <- glm(cigs ~ educ, 
+            family = poisson(link = 'log'),
+            data = smoking_df)
+
+vuong(M_18, M_17)
